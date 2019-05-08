@@ -50,3 +50,4 @@ RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /sdk/pac
 
 RUN yes | ${ANDROID_HOME}/tools/bin/sdkmanager --licenses
 
+RUN apt-get install -qqy --no-install-recommends openssh-client
