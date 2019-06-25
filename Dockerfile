@@ -20,6 +20,7 @@ RUN apt-get install -qqy --no-install-recommends \
       git \
       git-lfs \
       cmake \
+      openssh-client \
       html2text \
       openjdk-8-jdk \
       libc6-i386 \
