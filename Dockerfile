@@ -3,8 +3,10 @@ LABEL maintainer="sylvarant"
 
 ENV VERSION_SDK_TOOLS "4333796"
 
+ENV ANDROID_NDK_VERSION r20
 ENV ANDROID_HOME "/sdk"
-ENV PATH "$PATH:${ANDROID_HOME}/tools"
+ENV ANDROID_NDK_HOME "/ndk"
+ENV PATH "$PATH:${ANDROID_HOME}/tools:${ANDROID_NDK_HOME}"
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get -qq update
@@ -17,6 +19,7 @@ RUN apt-get install -qqy --no-install-recommends \
       curl \
       git \
       git-lfs \
+      cmake \
       html2text \
       openjdk-8-jdk \
       libc6-i386 \
@@ -49,4 +52,16 @@ RUN while read -r package; do PACKAGES="${PACKAGES}${package} "; done < /sdk/pac
     ${ANDROID_HOME}/tools/bin/sdkmanager ${PACKAGES}
 
 RUN yes | ${ANDROID_HOME}/tools/bin/sdkmanager --licenses
+
+# --- Android NDK
+RUN mkdir /opt/android-ndk-tmp && \
+    cd /opt/android-ndk-tmp && \
+    curl -s https://dl.google.com/android/repository/android-ndk-${ANDROID_NDK_VERSION}-linux-x86_64.zip > ndk.zip && \
+# uncompress
+    unzip ndk.zip && \
+# move to its final location
+    mv ./android-ndk-${ANDROID_NDK_VERSION} ${ANDROID_NDK_HOME} && \
+# remove temp dir
+    cd ${ANDROID_NDK_HOME} && \
+    rm -rf /opt/android-ndk-tmp
 
